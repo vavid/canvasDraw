@@ -5,6 +5,7 @@ export default defineConfig({
     { path: "/", component: "index" },
     { path: "/docs", component: "docs" },
     { path: "/simple", component: "@/pages/simple" },
+    { path: "/rotate", component: "@/pages/rotate" },
   ],
   npmClient: 'npm',
 });

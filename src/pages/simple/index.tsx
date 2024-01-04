@@ -85,14 +85,14 @@ const SimpleDraw: React.FC = () =>{
         ctx.stroke();
 
       }
-      bayMax.addEventListener('mousemove', (event) => {
-        const rect = bayMax.getBoundingClientRect();
+      // bayMax.addEventListener('mousemove', (event) => {
+      //   const rect = bayMax.getBoundingClientRect();
         
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
+      //   const x = event.clientX - rect.left;
+      //   const y = event.clientY - rect.top;
       
-        console.log('Mouse position on canvas:', x, y);
-      });
+      //   console.log('Mouse position on canvas:', x, y);
+      // });
     }
 
   }
