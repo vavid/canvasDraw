@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>绘制一个点</title>
+</head>
+<script type="x-shader/x-vertex" id="vertexShader">
+    void main(){
+      gl_Position = vec4(0.0, 0.0, 0.0, 1.0); // 顶点的位置
+      gl_PointSize = 100.0; //顶点的尺寸 
+    }
+</script>
+<script type="x-shader/x-fragment" id="fragmentShader">
+    void main(){
+      gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0); // 黄颜色
+    }
+</script>
+<script>
+    let webgl;
+    function init(){
+        const canvas = document.querySelector('#canvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        webgl = canvas.getContext('webgl');
+        webgl.viewport(0,0,canvas.clientWidth, canvas.clientHeight);
+
+        const vsSource = document.querySelector('#vertexShader').innerText;
+        const fsSource = document.querySelector('#fragmentShader').innerText;
+
+        initShader(webgl, vsSource, fsSource);
+
+        webgl.clearColor(0,0,0,1);
+
+        webgl.clear(webgl.COLOR_BUFFER_BIT);
+
+        webgl.drawArrays(webgl.POINTS, 0, 1);
+    }
+    function initShader(gl, vsSource, fsSource){
+        // 创建程序对象
+        const program = gl.createProgram();
+
+        // 建立着色器对象
+        const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
+        const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
+
+        // 将着色器对象装进程序对象中
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+
+        // 将webgl上下文对象和程序对象相关联
+        gl.linkProgram(program);
+
+        // 启动程序对象
+        gl.useProgram(program);
+
+        // 将程序对象挂在webgl上下文对象上
+        gl.program = program;
+
+        return true;
+    }
+    function loadShader(gl, type, source){
+        // 根据着色器类型，建立着色器对象
+        const shader = gl.createShader(type);
+
+        // 将着色器源文件传入着色器对象中
+        gl.shaderSource(shader, source);
+
+        // 编译着色器对象
+        gl.compileShader(shader);
+        return shader;
+    }
+</script>
+<body onload="init()" >
+   <canvas id="canvas"></canvas> 
+</body>
+</html>
