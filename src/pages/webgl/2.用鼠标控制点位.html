@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>绘制一个点，用鼠标控制点位</title>
+</head>
+<script type="x-shader/x-vertex" id="vertexShader">
+    attribute vec4 a_Position; 
+    void main(){
+      gl_Position = a_Position; 
+      gl_PointSize = 50.0; 
+    }
+</script>
+    
+<script type="x-shader/x-fragment" id="fragmentShader">
+    void main(){
+      gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0); 
+    }
+</script>
+<script>
+    let webgl;
+    function init(){
+        const canvas = document.querySelector('#canvas');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        
+        // 一、通过canvas画布获取webgl上下文对象，并设置viewport
+        webgl = canvas.getContext('webgl');
+        webgl.viewport(0,0,canvas.clientWidth, canvas.clientHeight);
+        // 二、初始化顶点着色器代码和片元着色器代码
+        const vsSource = document.querySelector('#vertexShader').innerText;
+        const fsSource = document.querySelector('#fragmentShader').innerText;
+        // 三、创建程序对象
+        // 四、创建顶点着色器对象和片元着色器对象并编译着色器对象
+        // 五、将订单着色器对象和片元着色器对象装入程序对象中
+        // 六、将webgl上下文对象和程序对象相关联
+        // 七、启动程序对象
+        initShader(webgl, vsSource, fsSource);
+
+        const a_Position = webgl.getAttribLocation(webgl.program, 'a_Position'); // 2、在js中获取attribute变量
+
+        webgl.vertexAttrib1f(a_Position, 0.1)
+        // 八、设置清屏颜色
+        webgl.clearColor(0,0,0,1);
+        // 九、清屏
+        webgl.clear(webgl.COLOR_BUFFER_BIT);
+        // 十、GPU绘制图形于画布上
+        webgl.drawArrays(webgl.POINTS, 0, 1);
+
+
+
+        canvas.addEventListener('click', ({clientX, clientY})=>{
+            const {left, top, width, height} = canvas.getBoundingClientRect();
+            const [cssX, cssY] = [
+                clientX - left,
+                clientY - top
+            ]
+            // 1、解决坐标原点位置的差异
+            const [halfWidth, halfHeight] = [width/2, height/2];
+
+            // [xBaseCenter, yBaseCenter]是鼠标位减去canbas画布的中心位，得到鼠标基于画布中心的位置
+            const [xBaseCenter, yBaseCenter] = [cssX-halfWidth, cssY-halfHeight]
+
+            // 解决y方向的差异，因为webgl里面y轴方向和canvas里的y轴方向相反
+            const yBaseCenterTop = -yBaseCenter
+
+            // 2、解决坐标基地的差异
+            const [x, y] = [xBaseCenter / halfWidth, yBaseCenterTop / halfHeight];
+
+            webgl.vertexAttrib2f(a_Position, x, y) // 3. 需要attribute 变量
+            webgl.clear(webgl.COLOR_BUFFER_BIT);
+            webgl.drawArrays(webgl.POINTS, 0, 1);
+        })
+    }
+    function initShader(gl, vsSource, fsSource){
+        // 创建程序对象
+        const program = gl.createProgram();
+
+        // 建立着色器对象
+        const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
+        const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
+
+        // 将着色器对象装进程序对象中
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+
+        // 将webgl上下文对象和程序对象相关联
+        gl.linkProgram(program);
+
+        // 启动程序对象
+        gl.useProgram(program);
+
+        // 将程序对象挂在webgl上下文对象上
+        gl.program = program;
+
+        return true;
+    }
+    function loadShader(gl, type, source){
+        // 根据着色器类型，建立着色器对象
+        const shader = gl.createShader(type);
+
+        // 将着色器源文件传入着色器对象中
+        gl.shaderSource(shader, source);
+
+        // 编译着色器对象
+        gl.compileShader(shader);
+        return shader;
+    }
+</script>
+<body onload="init()" >
+   <canvas id="canvas"></canvas> 
+</body>
+</html>

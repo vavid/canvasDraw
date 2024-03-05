@@ -102,7 +102,7 @@ const SimpleDraw: React.FC = () =>{
             // 设置webgl渲染这个程序
             gl.useProgram(program);
 
-            // 获取u_color变量位置
+            // 获取u_color变量位置并赋值
             const colorLocation = gl.getUniformLocation(program, 'u_color')
             gl.uniform4f(colorLocation, 0.93,0, 0.56,1)
 
