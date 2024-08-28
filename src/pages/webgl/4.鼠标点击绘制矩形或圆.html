@@ -3,21 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>绘制一个点，用鼠标控制点位</title>
+    <title>绘制矩形或圆</title>
 </head>
+<!-- 顶点着色器 -->
 <script type="x-shader/x-vertex" id="vertexShader">
     attribute vec4 a_Position; 
+    attribute float a_PointSize;
     void main(){
       gl_Position = a_Position; 
-      gl_PointSize = 50.0; 
+      gl_PointSize = a_PointSize; 
     }
 </script>
-    
-<script type="x-shader/x-fragment" id="fragmentShader">
+<!-- 片元着色器 -->
+<!-- distance(p1, p2) 计算两个点之间的距离 -->
+<!-- gl_PointCoord 片元在一个点中的位置，此位置是被归一化的 -->
+<!--  限定颜色变量的限定符：uniform -->
+<!-- precision mediump float; 浮点数据的类型设置为中度 -->
+<script type="x-shader/x-fragment" id="fragmentShaderSquare">
+    precision mediump float;
+    uniform vec4 u_FragColor;
     void main(){
-      gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0); 
+      gl_FragColor = u_FragColor;
     }
 </script>
+<script type="x-shader/x-fragment" id="fragmentShaderCircle">
+    precision mediump float;
+    uniform vec4 u_FragColor;
+    void main(){
+        float dist = distance(gl_PointCoord, vec2(0.5, 0.5));
+        if(dist < 0.5){
+            gl_FragColor = u_FragColor;
+        }else{
+            discard;
+        }
+    }
+</script>
+
 <script>
     let webgl;
     function init(){
@@ -31,7 +52,8 @@
         webgl.viewport(0,0,canvas.clientWidth, canvas.clientHeight);
         // 二、初始化顶点着色器代码和片元着色器代码
         const vsSource = document.querySelector('#vertexShader').innerText;
-        const fsSource = document.querySelector('#fragmentShader').innerText;
+        // const fsSource = document.querySelector('#fragmentShaderSquare').innerText;
+        const fsSource = document.querySelector('#fragmentShaderCircle').innerText;
         // 三、创建程序对象
         // 四、创建顶点着色器对象和片元着色器对象并编译着色器对象
         // 五、将订单着色器对象和片元着色器对象装入程序对象中
@@ -40,15 +62,25 @@
         initShader(webgl, vsSource, fsSource);
 
         const a_Position = webgl.getAttribLocation(webgl.program, 'a_Position'); // 2、在js中获取attribute变量
+        const a_PointSize = webgl.getAttribLocation(webgl.program, 'a_PointSize'); // 2、在js中获取attribute变量
+
+        // 获取uniform 变量
+        const u_FragColor = webgl.getUniformLocation(webgl.program, 'u_FragColor');
+
+        const a_points = [{x:0, y:0, size: 10,color:{r:1,g:1,b:0,a:1}}]
+        // render()
 
         webgl.vertexAttrib1f(a_Position, 0.1)
+        webgl.vertexAttrib1f(a_PointSize, 100)
+        // 修改uniform变量
+        webgl.uniform4f(u_FragColor, 1,0,1, 1)
         // 八、设置清屏颜色
         webgl.clearColor(0,0,0,1);
         // 九、清屏
         webgl.clear(webgl.COLOR_BUFFER_BIT);
         // 十、GPU绘制图形于画布上
-        webgl.drawArrays(webgl.POINTS, 0, 1);
-
+        // webgl.drawArrays(webgl.POINTS, 0, 1);
+        render()
 
 
         canvas.addEventListener('click', ({clientX, clientY})=>{
@@ -68,11 +100,29 @@
 
             // 2、解决坐标基地的差异
             const [x, y] = [xBaseCenter / halfWidth, yBaseCenterTop / halfHeight];
-
-            webgl.vertexAttrib2f(a_Position, x, y) // 3. 需要attribute 变量
-            webgl.clear(webgl.COLOR_BUFFER_BIT);
-            webgl.drawArrays(webgl.POINTS, 0, 1);
+            const size = Math.random() * 100 + 10
+            const n = Math.random();
+            const color = {r: n, g: 1-n, b: 1, a: 1}
+            a_points.push({x, y, size, color})
+            render()
+            // webgl.vertexAttrib2f(a_Position, x, y) // 3. 需要attribute 变量
+            // webgl.clear(webgl.COLOR_BUFFER_BIT);
+            // webgl.drawArrays(webgl.POINTS, 0, 1);
         })
+        function render(){
+            webgl.clear(webgl.COLOR_BUFFER_BIT);
+            a_points.forEach(({x, y, size, color})=>{
+                webgl.vertexAttrib2f(a_Position, x, y)
+                webgl.vertexAttrib1f(a_PointSize, size)
+                // 写法一 uniform4f:
+                // webgl.uniform4f(u_FragColor, color.r, color.g, color.b, color.a)
+
+                // 写法二 uniform4fv：
+                const arr = new Float32Array([color.r, color.g, color.b, color.a])
+                webgl.uniform4fv(u_FragColor, arr)
+                webgl.drawArrays(webgl.POINTS, 0, 1);
+            })
+        }
     }
     function initShader(gl, vsSource, fsSource){
         // 创建程序对象
@@ -108,6 +158,7 @@
         gl.compileShader(shader);
         return shader;
     }
+    
 </script>
 <body onload="init()" >
    <canvas id="canvas"></canvas> 

@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>绘制一个点，用鼠标控制点位</title>
+    <title>同步绘图原理</title>
 </head>
+<!-- 顶点着色器 -->
 <script type="x-shader/x-vertex" id="vertexShader">
     attribute vec4 a_Position; 
+    attribute float a_PointSize;
     void main(){
       gl_Position = a_Position; 
-      gl_PointSize = 50.0; 
+      gl_PointSize = a_PointSize; 
     }
 </script>
-    
+<!-- 片元着色器 -->
 <script type="x-shader/x-fragment" id="fragmentShader">
     void main(){
       gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0); 
@@ -40,8 +42,10 @@
         initShader(webgl, vsSource, fsSource);
 
         const a_Position = webgl.getAttribLocation(webgl.program, 'a_Position'); // 2、在js中获取attribute变量
+        const a_PointSize = webgl.getAttribLocation(webgl.program, 'a_PointSize'); // 2、在js中获取attribute变量
 
         webgl.vertexAttrib1f(a_Position, 0.1)
+        webgl.vertexAttrib1f(a_PointSize, 100)
         // 八、设置清屏颜色
         webgl.clearColor(0,0,0,1);
         // 九、清屏
