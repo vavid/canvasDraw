@@ -1,31 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-// import { Compose } from 'three';
 import Compose from './jsm/Compose.js'
 import Track from './jsm/Track.js'
-// import styles from './index.less';
 import './stars.less'
 
-// Color https://threejs.org/docs/?q=color#api/zh/math/Color
 
 const SimpleDraw: React.FC = () =>{
   const webglRef = useRef<HTMLCanvasElement>(null);
-  const [gl, setGl] = useState<any>(null)
-//   const gl = webglRef.current?.getContext('webgl');
-//   const [stars, setStars] = useState<{x: number, y: number, size: number, a: number}[]>([])
-//   const [compose, setCompose] = useState(new Compose())
-//   const [aPosition, setAPosition] = useState(0)
-//   const [aPointSize, setAPointSize] = useState(0)
-//   const [uFragColor, setUFragColor] = useState<WebGLUniformLocation | null>(null)   
-
-    // const init = () => {
-    //   const webgl = webglRef.current;
-
-    //     if(webgl){
-    //         webgl.width = window.innerWidth;
-    //         webgl.height = window.innerHeight;
-    //         // setGl(webgl.getContext('webgl'))
-    //     }
-    // }
+  
  
   const drawStars = () => {
     const webgl = webglRef.current;
@@ -33,7 +14,6 @@ const SimpleDraw: React.FC = () =>{
       if(gl && webgl){
         webgl.width = window.innerWidth;
         webgl.height = window.innerHeight;
-        // setGl(gl)
         
         // 设置 webgl 视口，将 -1 到 1 映射为 canvas 上的坐标
         gl.viewport(0, 0, webgl.clientWidth, webgl.clientHeight)
@@ -79,9 +59,6 @@ const SimpleDraw: React.FC = () =>{
           `)
           // 编译着色器
           gl.compileShader(fragmentShader)
-
-         
-
         }
          // 创建一个程序
          if(program){
@@ -100,14 +77,12 @@ const SimpleDraw: React.FC = () =>{
            // 在js中获取attribute变量 
            const a_Position = gl.getAttribLocation(program, 'a_Position');
            const a_PointSize = gl.getAttribLocation(program, 'a_PointSize');
-        //    setAPosition(a_Position);
-        //    setAPointSize(a_PointSize);
 
            // 获取uniform变量
            const u_FragColor = gl.getUniformLocation(program, 'u_FragColor');
-        //    setUFragColor(u_FragColor);
-           const stars:any = []
 
+           
+           const stars:any = []
            const compose = new Compose()
 
            gl.vertexAttrib1f(a_Position, 0.1);
@@ -158,8 +133,7 @@ const SimpleDraw: React.FC = () =>{
                    ]
                ])
                compose.add(track)
-   
-               // render()
+               
            })
            function step(){                
                compose.update(new Date())
@@ -167,7 +141,6 @@ const SimpleDraw: React.FC = () =>{
                requestAnimationFrame(step)
            }
            step()
-           // requestAnimationFrame(step)
            function render(){
                 if(!gl) return
                gl.clear(gl.COLOR_BUFFER_BIT);
@@ -188,48 +161,14 @@ const SimpleDraw: React.FC = () =>{
 
         
       }
-    // }
   }
-//   const render = () => {
-//     if(!gl) return
-//     gl.clear(gl.COLOR_BUFFER_BIT);
-//     stars.forEach(({x, y, size, a})=>{
-//         gl.vertexAttrib2f(aPointSize, x, y)
-//         gl.vertexAttrib1f(aPointSize, size)
-//         // 写法一 uniform4f:
-//         // gl.uniform4f(u_FragColor, color.r, color.g, color.b, color.a)
-
-//         // 写法二 uniform4fv：
-//         const arr = new Float32Array([0.87, 0.91, 1, a])
-//         gl.uniform4fv(uFragColor, arr)
-//         gl.drawArrays(gl.POINTS, 0, 1);
-//     })
-// }
-  
 
   
-  useEffect(() => {
-    // init()
-    drawStars()
+    useEffect(() => {
+        drawStars()
+    }, []);
 
-  }, []);
-
-//   useEffect(()=>{
-//     drawStars()
-//   },[gl])
-
-//   useEffect(() => {
-//     function step(){
-//         console.log('step');
-        
-//         compose.update(new Date())
-//         render()
-//         requestAnimationFrame(step)
-//     }
-//     requestAnimationFrame(step)
-//   },[compose, aPointSize, aPosition, uFragColor])
-
-  return <div className="container">
+    return <div className="container">
     <canvas ref={webglRef} className='canvas'></canvas>
   </div>
 }
