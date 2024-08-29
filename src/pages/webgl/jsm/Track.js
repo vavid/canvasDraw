@@ -23,7 +23,7 @@ export default class Track{
     constructor(target){
         this.target=target
         this.parent=null
-        this.start=0
+        this.start=null
         this.timeLen=5
         this.loop=false
         this.keyMap=new Map()
