@@ -8,7 +8,8 @@ export default defineConfig({
     { path: "/rotate", component: "@/pages/rotate" },
     { path: "/webgl", component: "@/pages/webgl",
       routes: [
-        {path: 'stars', component: '@/pages/webgl/stars'}
+        {path: 'stars', component: '@/pages/webgl/stars'},
+        {path: 'shapes', component: '@/pages/webgl/shapes'}
     ]},
   ],
   npmClient: 'npm',

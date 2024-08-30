@@ -138,7 +138,7 @@ const SimpleDraw: React.FC = () =>{
            function step(){                
                compose.update(new Date())
                render()
-               requestAnimationFrame(step)
+               requestAnimationFrame(step) // requestAnimationFrame 提供了高效的方式处理动画，它只在浏览器需要重绘时才运行代码，避免了再不需要动画帧时的不必要运行，其执行频率依赖屏幕刷新率，通常是60HZ（每秒60次）
            }
            step()
            function render(){
