@@ -59,12 +59,52 @@ const SimpleDraw: React.FC = () =>{
            gl.useProgram(program);
            
 
-          // 设置顶点点位
+          //一、 设置顶点点位
+          //二、 设置顶点点位
+          // const vertices = new Float32Array([
+          //   // x  y
+          //   0.0, 0.2, // 顶点
+          //   -0.2, -0.1,
+          //   0.2, -0.1
+          // ])
+          // 三、 设置顶点点位
+          // 四、 设置顶点点位
+          // 五、 设置顶点点位
+          // const vertices = new Float32Array([
+          //   // x  y
+          //   0.0, 0.3, // v1
+          //   -0.2, -0.1, // v2
+          //   0.2, -0.1, // v3
+          //   0.4, 0.3 // v4
+          // ])
+          // 六、 设置顶点点位-三角形
+          // const vertices = new Float32Array([
+          //   // x  y
+          //   0.0, 0.3, // v1
+          //   -0.2, -0.1, // v2
+          //   0.2, -0.1, // v3
+
+          //   0.4, 0.3, // v4
+          //   0.2, -0.1, // v5
+          //   0.6, -0.1 // v6
+          // ])
+          // // 七、设置顶点点位-三角带
+          // const vertices = new Float32Array([
+          //   // x  y
+          //   0.0, 0.3, // v1
+          //   -0.2, -0.1, // v2
+          //   0.2, -0.1, // v3
+          //   0.4, 0.3, // v4
+          //   0.2, -0.1 // v5
+          // ])
+          // 八、设置顶点点位-三角扇
           const vertices = new Float32Array([
             // x  y
-            0.0, 0.2, // 顶点
-            -0.2, -0.1,
-            0.2, -0.1
+            0.0, 0.3, // v1
+            -0.2, -0.1, // v2
+            0.2, -0.1, // v3
+            0.4, 0.3, // v4
+            0.6, -0.1 // v5
           ])
           const vertextBuffer = gl.createBuffer();
           // 绑定缓冲对象
@@ -86,22 +126,31 @@ const SimpleDraw: React.FC = () =>{
 
            render()
            function render(){
-                if(!gl) return
-              //  gl.drawArrays(gl.POINTS, 0, 3);
-               gl.drawArrays(gl.TRIANGLES, 0, 3);
-              /**
+              if(!gl) return
+                /**
                * gl.drawArrays可以绘制：
                * POINTS： 点
                * LINES 单独线段
                * LINE_STRIP 线条
                * LINE_LOOP 闭合线条
-               * TRIANGLE 单独三角形
+               * TRIANGLES 单独三角形
                * TRIANGLE_STRIP 三角带
                * TRANGLE_FAN 三角扇
                */
-              
 
-              
+              //  gl.drawArrays(gl.POINTS, 0, 3); // 一、三个点
+              //  gl.drawArrays(gl.TRIANGLES, 0, 3); // 二、三角形
+              // gl.drawArrays(gl.LINES, 0, 4); // 三、线条：第一个点对应左边线条上，第二个点对应左下；第三个点对应右下，第四个点对应右上
+              // gl.drawArrays(gl.LINE_STRIP, 0, 4); // 四、线条：v1->v2->v3->v4
+              // gl.drawArrays(gl.LINE_LOOP, 0, 4); // 五、线条：v1->v2->v3->v4->v1
+              // gl.drawArrays(gl.TRIANGLES, 0, 6); // 六、三角形
+
+              // gl.drawArrays(gl.TRIANGLE_STRIP, 0, 5); // 七、三角带 v1->v2->v3 v3->v2->v4 v3->v4->v5 
+              // 规律：第三个三角形v1-v2-v3
+              // 偶数个三角形：以上一个三角形的第二条边+下一个点为基础，以和第二条边相反的方向绘制三角形
+              // 奇数个三角形：以上一个三角形的第三条边+下一个点为基础，以和第二条边相反的方向绘制三角形
+
+              gl.drawArrays(gl.TRIANGLE_FAN, 0, 5); // 八、三角扇：v1->v2->v3->v4->v5
            }
 
          }
