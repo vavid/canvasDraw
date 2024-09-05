@@ -1,5 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+/**
+ * 绘制多边形
+ */
 
+import React, { useEffect, useRef, useState } from 'react';
 
 const SimpleDraw: React.FC = () =>{
   const webglRef = useRef<HTMLCanvasElement>(null);
@@ -9,8 +12,8 @@ const SimpleDraw: React.FC = () =>{
     const webgl = webglRef.current;
     const gl = webgl?.getContext('webgl');
       if(gl && webgl){
-        webgl.width = window.innerWidth;
-        webgl.height = window.innerHeight;
+        webgl.width = document.querySelector('.container')?.clientWidth || 0;
+        webgl.height = document.documentElement.clientHeight * 0.92;
         
         // 设置 webgl 视口，将 -1 到 1 映射为 canvas 上的坐标
         gl.viewport(0, 0, webgl.clientWidth, webgl.clientHeight)
@@ -96,12 +99,6 @@ const SimpleDraw: React.FC = () =>{
           //   0.2, -0.1, // v3
           //   0.4, 0.3, // v4
           //   0.2, -0.1 // v5
-          // ])
-          // const vertices = new Float32Array([
-          //   -0.2, 0.2,
-          //   -0.2, -0.2,
-          //   0.2, 0.2,
-          //   0.2, -0.2,
           // ])
           // 八、设置顶点点位-三角扇
           const vertices = new Float32Array([

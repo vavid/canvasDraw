@@ -9,7 +9,9 @@ export default defineConfig({
     { path: "/webgl", component: "@/pages/webgl",
       routes: [
         {path: 'stars', component: '@/pages/webgl/stars'},
-        {path: 'shapes', component: '@/pages/webgl/shapes'}
+        {path: 'shapes', component: '@/pages/webgl/shapes'},
+        {path: 'polygon', component: '@/pages/webgl/polygon'},
+        {path: 'aline', component: '@/pages/webgl/aline'},
     ]},
   ],
   npmClient: 'npm',
