@@ -135,31 +135,29 @@ const SimpleDraw: React.FC = () =>{
                compose.add(track)
                
            })
-           function step(){                
+           const render = () => {
+            if(!gl) return
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            stars.forEach(({x, y, size, a}:any)=>{
+                gl.vertexAttrib2f(a_Position, x, y)
+                gl.vertexAttrib1f(a_PointSize, size)
+                // 写法一 uniform4f:
+                // webgl.uniform4f(u_FragColor, color.r, color.g, color.b, color.a)
+
+                // 写法二 uniform4fv：
+                const arr = new Float32Array([0.87, 0.91, 1, a])
+                gl.uniform4fv(u_FragColor, arr)
+                gl.drawArrays(gl.POINTS, 0, 1);
+            })
+          }
+           const step = () => {                
                compose.update(new Date())
                render()
                requestAnimationFrame(step) // requestAnimationFrame 提供了高效的方式处理动画，它只在浏览器需要重绘时才运行代码，避免了再不需要动画帧时的不必要运行，其执行频率依赖屏幕刷新率，通常是60HZ（每秒60次）
            }
            step()
-           function render(){
-                if(!gl) return
-               gl.clear(gl.COLOR_BUFFER_BIT);
-               stars.forEach(({x, y, size, a}:any)=>{
-                   gl.vertexAttrib2f(a_Position, x, y)
-                   gl.vertexAttrib1f(a_PointSize, size)
-                   // 写法一 uniform4f:
-                   // webgl.uniform4f(u_FragColor, color.r, color.g, color.b, color.a)
-
-                   // 写法二 uniform4fv：
-                   const arr = new Float32Array([0.87, 0.91, 1, a])
-                   gl.uniform4fv(u_FragColor, arr)
-                   gl.drawArrays(gl.POINTS, 0, 1);
-               })
-           }
 
          }
-
-        
       }
   }
 

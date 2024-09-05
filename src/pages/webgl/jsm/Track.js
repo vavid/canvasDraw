@@ -23,16 +23,32 @@ export default class Track{
     constructor(target){
         this.target=target
         this.parent=null
-        this.start=null
+        this.start=new Date()
         this.timeLen=5
         this.loop=false
         this.keyMap=new Map()
+    }
+    getValBetweenFms(time,fms,last){
+        for(let i=0;i<last;i++){
+            const [t1,v1]=fms[i]
+            const [t2,v2]=fms[i+1]
+            if(time>=t1&&time<t2){
+                // return v1+(v2-v1)*(time-t1)/(t2-t1)
+                const delta = {
+                    x: t2 - t1,
+                    y: v2 - v1
+                }
+                const k = delta.y / delta.x
+                const b = v1 - k * t1
+                return k * time + b
+            }
+        }
     }
     update(t){
         const {keyMap,timeLen,target,loop}=this
         let time=t-this.start
         if(loop){
-            time-time%timeLen
+            time=time%timeLen
         }
         for(const [key,fms] of keyMap.entries()){
             const last=fms.length-1
@@ -41,24 +57,8 @@ export default class Track{
             else if(time>fms[last][0]){
                 target[key]=fms[last][1]
             }else{
-                target[key]=getValBetweenFms(time,fms,last)
+                target[key]=this.getValBetweenFms(time,fms,last)
             }
-        }
-    }
-}
-function getValBetweenFms(time,fms,last){
-    for(let i=0;i<last;i++){
-        const [t1,v1]=fms[i]
-        const [t2,v2]=fms[i+1]
-        if(time>=t1&&time<t2){
-            // return v1+(v2-v1)*(time-t1)/(t2-t1)
-            const delta = {
-                x: t2 - t1,
-                y: v2 - v1
-            }
-            const k = delta.y / delta.x
-            const b = v1 - k * t1
-            return k * time + b
         }
     }
 }
