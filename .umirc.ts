@@ -5,6 +5,8 @@ export default defineConfig({
     { path: "/", component: "index" },
     { path: "/docs", component: "docs" },
     { path: "/simple", component: "@/pages/simple" },
+    { path: "/baymax", component: "@/pages/baymax" },
+    { path: "/catEar", component: "@/pages/catEar" },
     { path: "/rotate", component: "@/pages/rotate" },
     { path: "/webgl", component: "@/pages/webgl",
       routes: [

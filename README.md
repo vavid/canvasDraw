@@ -2,6 +2,7 @@
 
 基于umi： https://umijs.org/docs/guides/getting-started
 
+配置路由：.umirc.ts
 
 
 二次贝塞尔曲线：

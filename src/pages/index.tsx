@@ -1,15 +1,28 @@
-import yayJpg from '../assets/yay.jpg';
+import baymax from '../assets/sample/baymax.png'
+import './index.less'
+
+const lists = [{
+  name: '大白',
+  date: '2024-03',
+  link: '/simple',
+  poster: baymax
+},{
+  name: '大白',
+  date: '2024-03',
+  link: '/baymax',
+  poster: baymax
+}]
 
 export default function HomePage() {
+  
   return (
-    <div>
-      <h2>Yay! Welcome to umi!</h2>
-      <p>
-        <img src={yayJpg} width="388" />
-      </p>
-      <p>
-        To get started, edit <code>pages/index.tsx</code> and save to reload.
-      </p>
+    <div className='container'>
+      {
+        lists.map(item => {
+          const {name, date, link, poster} = item
+          return <div className='item' onClick={()=>{location.href=link}}><img src={poster} />{name}</div>
+        })
+      }
     </div>
   );
 }
