@@ -6,6 +6,7 @@ export default defineConfig({
     { path: "/docs", component: "docs" },
     { path: "/simple", component: "@/pages/simple" },
     { path: "/baymax", component: "@/pages/baymax" },
+    { path: "/bezierMove", component: "@/pages/bezierMove" },
     { path: "/catEar", component: "@/pages/catEar" },
     { path: "/rotate", component: "@/pages/rotate" },
     { path: "/webgl", component: "@/pages/webgl",
