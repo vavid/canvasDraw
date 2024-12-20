@@ -1,92 +1,64 @@
 import React, { useEffect, useRef } from 'react';
 import './index.less'
 // import {Bezier} from '../../vendor/bezier'
-const SimpleDraw: React.FC = () =>{
-  const simleRef = useRef<HTMLCanvasElement>(null);
-  const drawSimle = () =>{
-    if (simleRef.current) {
-      const simle = simleRef.current;
-      const ctx = simle.getContext('2d');
-      
+const CatEarDraw: React.FC = () =>{
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const drawCatEar = () =>{
+    if (canvasRef.current) {
+      const $canvas = canvasRef.current;
+      const ctx = $canvas.getContext('2d');    
+      const width = $canvas.width;  
+      const height = $canvas.height;
+      $canvas.addEventListener('mousedown', onMouseDown, false)
+      function onMouseDown(e: MouseEvent){
+        const {left, top} = $canvas.getBoundingClientRect();
+        console.log('相对于Canvas的坐标:', e.clientX - left, e.clientY - top)
+        // console.log('client:',e.clientX, e.clientY)
+        const x = e.offsetX;
+        const y = e.offsetY;
+      }
       if (ctx) {
         // 画布背景渐变色
-        const gradient = ctx.createLinearGradient(0, 0, 0, 500);
+        const gradient = ctx.createLinearGradient(0, 0, 0, height);
         gradient.addColorStop(0, '#C9E0FC');
         gradient.addColorStop(1, '#FFF');
         ctx.beginPath()
         ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 400, 500);
+        ctx.fillRect(0, 0, width, height);
 
 
         // 设置线条样式
-        ctx.lineWidth = 2;        // 设置线宽
-        ctx.strokeStyle = 'rgba(255,255,255,0.3)'; // 设置描边颜色
+        ctx.lineWidth = 3;        // 设置线宽
+        ctx.strokeStyle = 'rgba(255,255,255,0.5)'; // 设置描边颜色
+
         ctx.beginPath();
+        ctx.moveTo(20, 390);
+        ctx.bezierCurveTo(60, 90, 113, 84, 220, 166);
+        ctx.bezierCurveTo(255, 34, 323, 23, 495, 226);
+        ctx.lineTo(452, 270);
+        ctx.quadraticCurveTo(398, 180, 300, 135);
+        ctx.bezierCurveTo(275, 260, 230, 260, 133, 190);
+        ctx.quadraticCurveTo(100, 240, 90, 360);
+        ctx.lineTo(23, 390);
+        ctx.stroke();
 
-        // 耳朵-上轮廓-左
-        const top_l1_begain = { x: 10, y: 320 };
-        const top_l1_end = { x: 190, y: 210 };
-        ctx.moveTo(top_l1_begain.x, top_l1_begain.y); 
-        const top_l1_cp1 = { x: 25, y: 33 };
-        const top_l1_cp2 = { x: 100, y: 66 };
-        ctx.bezierCurveTo(top_l1_cp1.x, top_l1_cp1.y, top_l1_cp2.x, top_l1_cp2.y, top_l1_end.x, top_l1_end.y); 
-
-        // 耳朵-上轮廓-右
-        const top_l2_begain = top_l1_end;
-        const top_l2_end = { x: 400, y: 300 };
-        ctx.moveTo(top_l2_begain.x, top_l2_begain.y); 
-        const top_l2_cp1 = { x: 220, y: 30 };
-        const top_l2_cp2 = { x: 320, y: 24 };
-        ctx.bezierCurveTo(top_l2_cp1.x, top_l2_cp1.y, top_l2_cp2.x, top_l2_cp2.y, top_l2_end.x, top_l2_end.y); 
-
-        
-        // 耳朵-下轮廓-左
-        const bottom_l1_begain = { x: 50, y: 320 };
-        const bottom_l1_end = { x: 140, y: 200 };
-        ctx.moveTo(bottom_l1_begain.x, bottom_l1_begain.y); 
-        const bottom_l1_cp1 = { x: 40, y: 150 };
-        const bottom_l1_cp2 = { x: 100, y: 120 };
-        ctx.bezierCurveTo(bottom_l1_cp1.x, bottom_l1_cp1.y, bottom_l1_cp2.x, bottom_l1_cp2.y, bottom_l1_end.x, bottom_l1_end.y);
-        
-        // 耳朵-下轮廓-中间
-        const bottom_l2_begain = bottom_l1_end;
-        const bottom_l2_end = { x: 230, y: 200 };
-        ctx.moveTo(bottom_l2_begain.x, bottom_l2_begain.y); 
-        const bottom_l2_cp = { x: 210, y: 300 };
-        ctx.quadraticCurveTo(bottom_l2_cp.x, bottom_l2_cp.y, bottom_l2_end.x, bottom_l2_end.y)
-
-        // 耳朵-下轮廓-右
-        const bottom_l3_begain = bottom_l2_end;
-        const bottom_l3_end = { x: 350, y: 300 };
-        ctx.moveTo(bottom_l3_begain.x, bottom_l3_begain.y); 
-        const bottom_l3_cp1 = { x: 240, y: 80 };
-        const bottom_l3_cp2 = { x: 320, y: 120 };
-        ctx.bezierCurveTo(bottom_l3_cp1.x, bottom_l3_cp1.y, bottom_l3_cp2.x, bottom_l3_cp2.y, bottom_l3_end.x, bottom_l3_end.y);
-        
-        // 关闭路径
-        // ctx.closePath();
-       
-        
-        // const gradient_separate = ctx.createRadialGradient(160, 80, 200, 280, 140, 10);
-        // gradient_separate.addColorStop(0, '#00f');
-        // gradient_separate.addColorStop(1, '#fff');
-
-        // ctx.fillStyle = gradient_separate;
-        // ctx.fill();
-
-        ctx.stroke();     // 描边路径
+        const gradient_inner = ctx.createLinearGradient(188, 97, 236, 290); 
+        gradient_inner.addColorStop(0, '#c5e7f7');
+        gradient_inner.addColorStop(1, '#fff');
+        ctx.fillStyle = gradient_inner;
+        ctx.fill();
       }
     }
   }
   
   useEffect(() => {
-    drawSimle();
+    drawCatEar();
 
   }, []);
 
   return <div className="container">
-    <canvas ref={simleRef} width="400" height="500"></canvas>
+    <canvas ref={canvasRef} width={420} height={320}></canvas>
   </div>
 }
 
-export default SimpleDraw
+export default CatEarDraw

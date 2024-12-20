@@ -278,7 +278,7 @@ const SimpleDraw: React.FC = () =>{
         gradient_midway.addColorStop(0.5, '#0f0');
         gradient_midway.addColorStop(1, '#fff');
         // 4、开始坐标和结束坐标不一样
-        const gradient_separate = ctx.createRadialGradient(160, 80, 200, 280, 140, 10);
+        const gradient_separate = ctx.createRadialGradient(155, 80, 200, 280, 140, 10);
         gradient_separate.addColorStop(0, '#00f');
         gradient_separate.addColorStop(1, '#fff');
 
