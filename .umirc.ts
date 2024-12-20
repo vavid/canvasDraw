@@ -8,7 +8,6 @@ export default defineConfig({
     { path: "/animate", component: "@/pages/animate" },
     { path: "/baymax", component: "@/pages/baymax" },
     { path: "/catEar", component: "@/pages/catEar" },
-    { path: "/rotate", component: "@/pages/rotate" },
     { path: "/webgl", component: "@/pages/webgl",
       routes: [
         {path: 'stars', component: '@/pages/webgl/stars'},
