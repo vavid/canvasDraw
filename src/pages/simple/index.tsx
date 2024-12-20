@@ -14,6 +14,8 @@ const SimpleDraw: React.FC = () =>{
   const bezierBezierRef = useRef<HTMLCanvasElement>(null);
   const lineJoinRef = useRef<HTMLCanvasElement>(null);
   const opacityRef = useRef<HTMLCanvasElement>(null);
+  const linearGradientRef = useRef<HTMLCanvasElement>(null);
+  const radialGradientRef = useRef<HTMLCanvasElement>(null);
   const simleRef = useRef<HTMLCanvasElement>(null);
   const drawLine = () =>{
     if(lineRef.current){
@@ -81,6 +83,15 @@ const SimpleDraw: React.FC = () =>{
       const ctx = quadraticBezier.getContext('2d');
       if (ctx) {
         ctx.beginPath();
+        ctx.lineWidth = 5;  // 设置线条粗细，默认是1.0
+
+        // 贝塞尔曲线渐变颜色
+        const gradient = ctx.createLinearGradient(50, 50, 250, 50);
+        gradient.addColorStop(0, 'red');
+        gradient.addColorStop(1, 'blue');
+        // 设置渐变为描边样式
+        ctx.strokeStyle = gradient;
+
         // 起始点-绿色
         ctx.moveTo(50, 50); 
         ctx.arc(50, 50, 5, 0, Math.PI * 2, true)
@@ -101,6 +112,8 @@ const SimpleDraw: React.FC = () =>{
         ctx.quadraticCurveTo(cp1.x, cp1.y, 250, 50);
         ctx.stroke();
 
+        
+
         // 终点-红色
         ctx.beginPath();
         ctx.arc(250, 50, 5, 0, Math.PI * 2, true)
@@ -120,6 +133,7 @@ const SimpleDraw: React.FC = () =>{
         // ctx.bezierCurveTo(cp1x,cp1y, cp2x,cp2y, x, y)
         // 其中cp1x和cp1y为一个控制点，cp2x和cp2y为第二个控制点，x和y为结束点。
         ctx.beginPath();
+        
         // 起始点-绿色
         ctx.moveTo(50, 50); 
         ctx.arc(50, 50, 5, 0, Math.PI * 2, true)
@@ -140,6 +154,7 @@ const SimpleDraw: React.FC = () =>{
 
         // 绘制贝塞尔曲线
         ctx.beginPath();
+        ctx.lineWidth = 5;  // 设置线条粗细，默认是1.0
         ctx.moveTo(50, 50); // 起始点
         // quadraticCurveTo(cp1x, cp1y, x, y)，其中cp1x和cp1y为一个控制点，x和y为结束点。
         ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, 250, 50);
@@ -163,6 +178,7 @@ const SimpleDraw: React.FC = () =>{
       if (ctx) {
         ctx.beginPath();
         ctx.lineWidth = 20;
+        ctx.lineCap = 'round'; //设置线段端点显示的样子。可选值为：butt(默认)，round 和 square
         ctx.strokeStyle = '#f00';
         // 设置两线段连接处所显示的样子。可选值为：round, bevel 和 miter(默认)。
         ctx.lineJoin = 'bevel'; // 斜接
@@ -213,11 +229,73 @@ const SimpleDraw: React.FC = () =>{
       ctx.strokeRect(150, 20, 100, 50);
       // 绘制一个圆
       ctx.beginPath()
-      ctx.fillStyle = "rgba(255, 255, 0, 1)";
+      ctx.fillStyle = "rgba(0, 255, 255, 1)";
       // 设置透明度值
       ctx.globalAlpha = 0.5;
       ctx.arc(200, 100, 30, 0, Math.PI*2, true);
       ctx.fill();
+      }
+    }
+  }
+
+  const drawLinearGradient = () => {
+    const linearGradient = linearGradientRef.current;
+    if (linearGradient) {
+      const ctx = linearGradient.getContext('2d');
+      if (ctx) {
+        // 创建线性渐变
+        // createLinearGradient(x1, y1, x2, y2)，参数分别为 起点的坐标和终点的坐标。
+        const gradient = ctx.createLinearGradient(10, 20, 250, 20);
+        // 添加渐变颜色
+        gradient.addColorStop(0, 'red');
+        gradient.addColorStop(0.5, 'green');
+        gradient.addColorStop(1, 'blue');
+        ctx.beginPath()
+        ctx.fillStyle = gradient;
+        ctx.fillRect(10, 50, 250, 5); // 起点（10,50），宽度250，高度5的容器
+      }
+    }
+  }
+
+  const drawRadialGradient = () => {
+    const radialGradient = radialGradientRef.current;
+    if (radialGradient) {
+      const ctx = radialGradient.getContext('2d');
+      if (ctx) {
+        // 创建径向渐变
+        // createRadialGradient(x0, y0, r0, x1, y1, r1)，参数分别为开始圆和结束圆的 渐变圆心和半径。
+        // 1、结束左边为点
+        const gradient_dot = ctx.createRadialGradient(75, 35, 40, 75, 35, 0);
+        gradient_dot.addColorStop(0, '#f00');
+        gradient_dot.addColorStop(1, '#fff');
+        // 2、结束坐标为圆
+        const gradient_circle = ctx.createRadialGradient(225, 35, 40, 225, 35, 10);
+        gradient_circle.addColorStop(0, '#ff770f');
+        gradient_circle.addColorStop(1, '#fff');
+        // 3、从0.5的位置开始渲染
+        const gradient_midway = ctx.createRadialGradient(75, 110, 40, 75, 110, 0);
+        gradient_midway.addColorStop(0.5, '#0f0');
+        gradient_midway.addColorStop(1, '#fff');
+        // 4、开始坐标和结束坐标不一样
+        const gradient_separate = ctx.createRadialGradient(160, 80, 200, 280, 140, 10);
+        gradient_separate.addColorStop(0, '#00f');
+        gradient_separate.addColorStop(1, '#fff');
+
+        ctx.beginPath();
+        ctx.fillStyle = gradient_dot;
+        ctx.fillRect(5, 5, 140, 60);
+
+        ctx.beginPath();
+        ctx.fillStyle = gradient_circle;
+        ctx.fillRect(155, 5, 140, 60);
+
+        ctx.beginPath();
+        ctx.fillStyle = gradient_midway;
+        ctx.fillRect(5, 80, 140, 60);
+
+        ctx.beginPath();
+        ctx.fillStyle = gradient_separate;
+        ctx.fillRect(155, 80, 140, 60);
       }
     }
   }
@@ -254,6 +332,8 @@ const SimpleDraw: React.FC = () =>{
     drawbezierBezier()
     drawLineJoin()
     drawOpacity()
+    drawLinearGradient()
+    drawRadialGradient()
     drawSimle();
     
 
@@ -269,6 +349,8 @@ const SimpleDraw: React.FC = () =>{
     <canvas ref={bezierBezierRef}></canvas>
     <canvas ref={lineJoinRef}></canvas>
     <canvas ref={opacityRef}></canvas>
+    <canvas ref={linearGradientRef}></canvas>
+    <canvas ref={radialGradientRef}></canvas>
     <canvas ref={simleRef}></canvas>
   </div>
 }
