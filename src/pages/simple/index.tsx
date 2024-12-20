@@ -16,6 +16,7 @@ const SimpleDraw: React.FC = () =>{
   const opacityRef = useRef<HTMLCanvasElement>(null);
   const linearGradientRef = useRef<HTMLCanvasElement>(null);
   const radialGradientRef = useRef<HTMLCanvasElement>(null);
+  const heartRef = useRef<HTMLCanvasElement>(null);
   const simleRef = useRef<HTMLCanvasElement>(null);
   const drawLine = () =>{
     if(lineRef.current){
@@ -300,6 +301,43 @@ const SimpleDraw: React.FC = () =>{
     }
   }
 
+  /**
+   * 绘制动画的基本步骤
+   * 1、清空 canvas：除非接下来要画的内容会完全充满 canvas（例如背景图），否则需要清空所有。最简单的做法就是用 clearRect 方法。
+   * 2、保存 canvas 状态：如果要改变 canvas 状态的设置（样式，变形之类的），之后又要在每画一帧之时都是原始状态的情况时，需要先保存一下。
+   * 3、绘制动画图形（animated shapes）
+   * 4、恢复 canvas 状态：如果已经保存了 canvas 的状态，可以先恢复它，然后重绘下一帧。
+   */
+
+
+
+
+
+
+  const drawHeart = () =>{
+    const heart = heartRef.current;
+    if(!heart) return;
+    const ctx = heart.getContext('2d');
+    if(!ctx) return;
+    // 画布背景渐变色
+    const gradient = ctx.createLinearGradient(0, 0, 0, 150);
+    gradient.addColorStop(0, 'pink');
+    gradient.addColorStop(0.8, '#FFF');
+    ctx.fillStyle = gradient;
+    ctx.strokeStyle = '#F00';
+
+    ctx.beginPath()
+    ctx.moveTo(75, 40);
+    ctx.bezierCurveTo(75, 37, 70, 25, 50, 25);
+    ctx.bezierCurveTo(20, 25, 20, 62.5, 20, 62.5);
+    ctx.bezierCurveTo(20, 80, 40, 102, 75, 120);
+    ctx.bezierCurveTo(110, 102, 130, 80, 130, 62.5);
+    ctx.bezierCurveTo(130, 62.5, 130, 25, 100, 25);
+    ctx.bezierCurveTo(85, 25, 75, 37, 75, 40);
+    ctx.fill();
+    ctx.stroke();
+  }
+
   const drawSimle = () =>{
     if (simleRef.current) {
       const simle = simleRef.current;
@@ -308,6 +346,9 @@ const SimpleDraw: React.FC = () =>{
       // arc(x, y, radius, startAngle, endAngle, anticlockwise)。
       // x和Y为圆心的坐标，radius为半径，startAngle为圆弧或圆的开始位置，endAngle为圆弧或圆的结束位置
       if (ctx) {
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#0f0';
+
         ctx.beginPath();
         ctx.arc(75, 75, 50, 0, Math.PI * 2, true); // 绘制
         ctx.moveTo(110, 75); 
@@ -334,6 +375,7 @@ const SimpleDraw: React.FC = () =>{
     drawOpacity()
     drawLinearGradient()
     drawRadialGradient()
+    drawHeart()
     drawSimle();
     
 
@@ -351,6 +393,7 @@ const SimpleDraw: React.FC = () =>{
     <canvas ref={opacityRef}></canvas>
     <canvas ref={linearGradientRef}></canvas>
     <canvas ref={radialGradientRef}></canvas>
+    <canvas ref={heartRef}></canvas>
     <canvas ref={simleRef}></canvas>
   </div>
 }
