@@ -38,7 +38,7 @@ const CatEarDraw: React.FC = () =>{
         ctx.lineTo(452, 270);
         ctx.quadraticCurveTo(398, 180, 300, 135);
         ctx.bezierCurveTo(275, 260, 230, 260, 133, 190);
-        ctx.quadraticCurveTo(100, 240, 90, 360);
+        ctx.quadraticCurveTo(110, 240, 90, 360);
         ctx.lineTo(23, 390);
         ctx.stroke();
 
