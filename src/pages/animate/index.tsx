@@ -8,6 +8,7 @@ import {drawQadraticBezierPath} from '../../common/utils';
 const SimpleDraw: React.FC = () =>{
   const translateRef = useRef<HTMLCanvasElement>(null);
   const quadraticBezierRef = useRef<HTMLCanvasElement>(null);
+  const clockRef = useRef<HTMLCanvasElement>(null);
 
   const drawTranslate = () =>{
     if(translateRef.current){
@@ -69,17 +70,73 @@ const SimpleDraw: React.FC = () =>{
     }
   }
 
+  const drawClock = () =>{
+    const clock = clockRef.current
+    if (clock) {
+      const ctx = clock.getContext('2d');
+      const centerX = clock.width / 2;
+      const centerY = clock.height / 2;
+      function draw() {
+        if(!ctx) return
+        const now = new Date();
+        const sec = now.getSeconds();
+        const min = now.getMinutes();
+        const hr = now.getHours() % 12;
+
+        ctx.clearRect(0, 0, 400, 400)
+
+        // 画时针
+        ctx.save()
+        ctx.translate(centerX, centerY)
+        ctx.rotate((Math.PI / 6) * hr + (Math.PI / 360) * min + (Math.PI / 21600) * sec) // 时针角度
+        ctx.lineWidth = 3
+        ctx.strokeStyle = '#f00'
+        ctx.beginPath()
+        ctx.moveTo(0, 0)
+        ctx.lineTo(0, -30) // 时针长度
+        ctx.stroke()
+        ctx.restore()
+        
+        // 画分针
+        ctx.save()
+        ctx.translate(centerX, centerY)
+        ctx.rotate((Math.PI / 30) * min + (Math.PI / 1800) * sec) // 分针角度
+        ctx.lineWidth = 2
+        ctx.beginPath()
+        ctx.moveTo(0, 0)
+        ctx.lineTo(0, -40) // 分针长度
+        ctx.stroke()
+        ctx.restore()
+
+        // 画秒针
+        ctx.save()
+        ctx.translate(centerX, centerY)
+        ctx.rotate(Math.PI * 2 / 60 * sec) // 秒针角度
+        ctx.lineWidth = 1
+        ctx.lineCap = 'round'
+        ctx.strokeStyle = '#00f'
+        ctx.beginPath()
+        ctx.moveTo(0, 0)
+        ctx.lineTo(0, -80) // 秒针长度
+        ctx.stroke()
+        ctx.restore()
+        requestAnimationFrame(draw)
+      }
+      draw()
+    }
+  }
+
   useEffect(() => {
     drawTranslate();
     drawQadraticBezier();
-
+    drawClock()
   }, []);
 
   return <div className="container">
-
     <canvas ref={translateRef}></canvas>
-
     <canvas ref={quadraticBezierRef}></canvas>
+    <canvas ref={clockRef}></canvas>
+
   </div>
 }
 
