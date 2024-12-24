@@ -9,6 +9,30 @@ export function roundedRect(ctx:CanvasRenderingContext2D, x:number, y:number, wi
     ctx.stroke();
 }
 
+// 画辅助点
+export function drawPoint(ctx:CanvasRenderingContext2D, [x, y]:Array<number>, text:string) {
+    ctx.save();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#000';
+    
+    ctx.beginPath();
+    ctx.arc(x, y, 2, 0, Math.PI * 2);
+    ctx.stroke();
+  
+    const OFFSET_X = 6;
+    ctx.fillText(text, x + OFFSET_X, y);
+  
+    ctx.restore();
+}
+// 打印当前鼠标点击位置的坐标
+export function getCanvasOffset(canvas:HTMLCanvasElement) {
+    canvas.addEventListener('mousedown', (e:MouseEvent)=>{
+        const {left, top} = canvas.getBoundingClientRect();
+        console.log('相对于Canvas的坐标:', e.clientX - left, e.clientY - top)
+    }, false)
+}
+  
+
 /**
    * 绘制一条二次贝塞尔曲线
    * @param  {Object} ctx canvas渲染上下文

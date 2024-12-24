@@ -9,14 +9,7 @@ const CatEarDraw: React.FC = () =>{
       const ctx = $canvas.getContext('2d');    
       const width = $canvas.width;  
       const height = $canvas.height;
-      $canvas.addEventListener('mousedown', onMouseDown, false)
-      function onMouseDown(e: MouseEvent){
-        const {left, top} = $canvas.getBoundingClientRect();
-        console.log('相对于Canvas的坐标:', e.clientX - left, e.clientY - top)
-        // console.log('client:',e.clientX, e.clientY)
-        const x = e.offsetX;
-        const y = e.offsetY;
-      }
+      
       if (ctx) {
         // 画布背景渐变色
         const gradient = ctx.createLinearGradient(0, 0, 0, height);
